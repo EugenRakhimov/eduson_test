@@ -7,6 +7,7 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'rails-i18n', '~> 4.0.0' # For 4.0.x
+gem "paperclip", "~> 4.3"
 group :development, :test do
   gem 'byebug'
 end

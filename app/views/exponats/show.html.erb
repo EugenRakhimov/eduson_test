@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Link:</strong>
+  <%= @exponat.link %>
+</p>
+
+<p>
+  <strong>Item type:</strong>
+  <%= @exponat.item_type %>
+</p>
+
+<%= link_to 'Edit', edit_exponat_path(@exponat) %> |
+<%= link_to 'Back', exponats_path %>

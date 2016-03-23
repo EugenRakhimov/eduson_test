@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Exponats</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Link</th>
+      <th>Item type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @exponats.each do |exponat| %>
+      <tr>
+        <td><%= exponat.link %></td>
+        <td><%= exponat.item_type %></td>
+        <td><%= link_to 'Show', exponat %></td>
+        <td><%= link_to 'Edit', edit_exponat_path(exponat) %></td>
+        <td><%= link_to 'Destroy', exponat, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Exponat', new_exponat_path %>
