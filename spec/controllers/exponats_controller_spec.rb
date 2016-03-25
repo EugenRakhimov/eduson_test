@@ -46,7 +46,7 @@ RSpec.describe ExponatsController, :type => :controller do
     describe "Create exponat" do       
       it "redirects to home if user is not logged in " do
         exponat = create(:exponat)
-        post :create, exponat: { link: exponat.link, link_type: exponat.item_type }
+        post :create, exponat: { link: exponat.link, item_type: exponat.item_type }
         expect(response).to have_http_status(302)
         expect(response.request.flash["alert"]).to include("Вам необходимо войти в систему или зарегистрироваться.")
       end
@@ -55,34 +55,87 @@ RSpec.describe ExponatsController, :type => :controller do
         count_before = Exponat.count
         user = FactoryGirl.create(:user)
         sign_in :user, user
-        post :create, exponat: { link: exponat.link, link_type: exponat.item_type }
+        post :create, exponat: { link: exponat.link, item_type: exponat.item_type }
         expect(count_before+1).to eq(Exponat.count)
        end 
     end
 
-    describe "Show exponat"
+  describe "Edit exponat" do 
+    it "redirects if you are not logged in" do
+      get :edit, id:1
+      expect(response).to have_http_status(302)
+      expect(response.request.flash["alert"]).to include("Вам необходимо войти в систему или зарегистрироваться.")
+    end
+    it "redirects if you are trying edit exponat of other user" do
+      exponat = create(:exponat)
+      user1 = exponat.user
+      user2 = FactoryGirl.create(:user)
+      sign_in :user, user2
+      get :edit, id: exponat
+      expect(response).to have_http_status(302)
+      expect(response.request.flash["alert"]).to include("Вы пытаетесь совершить деструктивные действия с чужим контентом")
+    end
+    it "gets you inside" do
+      exponat = create(:exponat)
+      user = exponat.user
+      sign_in :user, user
+      get :edit, id: exponat
+      expect(response).to be_success
+      expect(response).to have_http_status(200)
+      expect(response).to render_template("edit")
+    end
   end
 
-  # test "should show exponat" do
-  #   get :show, id: @exponat
-  #   assert_response :success
-  # end
+  describe "update exponat" do
+    it "don't allow to update if you are not logged in" do
+      exponat = create(:exponat)
+      patch :update, id: exponat, exponat: { link: exponat.link, item_type: exponat.item_type }
+      expect(response).to have_http_status(302)
+      expect(response.request.flash["alert"]).to include("Вам необходимо войти в систему или зарегистрироваться.")
+    end
+    it "don't allow to update exponat of other user" do
+      exponat = create(:exponat)
+      user1 = exponat.user
+      user2 = FactoryGirl.create(:user)
+      sign_in :user, user2
+      patch :update, id: exponat, exponat: { link: exponat.link, item_type: exponat.item_type }
+      expect(response).to have_http_status(302)
+      expect(response.request.flash["alert"]).to include("Вы пытаетесь совершить деструктивные действия с чужим контентом")
+    end
+    it "updates item if you are logged in and you are an owner" do
+      exponat = create(:exponat)
+      user = exponat.user
+      sign_in :user, user
+      patch :update, id: exponat, exponat: { link: "test.link", item_type: 6 }
+      exponat = Exponat.first
+      expect(exponat.link).to eq("test.link")
+      expect(exponat.item_type).to eq(6)
+    end
+  end
 
-  # test "should get edit" do
-  #   get :edit, id: @exponat
-  #   assert_response :success
-  # end
-
-  # test "should update exponat" do
-  #   patch :update, id: @exponat, exponat: { link: @exponat.link, link_type: @exponat.link_type }
-  #   assert_redirected_to exponat_path(assigns(:exponat))
-  # end
-
-  # test "should destroy exponat" do
-  #   assert_difference('Exponat.count', -1) do
-  #     delete :destroy, id: @exponat
-  #   end
-
-  #   assert_redirected_to exponats_path
-  # end
+  describe "delete exponat" do
+    it "don't allow to delete if you are not logged in" do
+      exponat = create(:exponat)
+      delete :destroy, id: exponat
+      expect(response).to have_http_status(302)
+      expect(response.request.flash["alert"]).to include("Вам необходимо войти в систему или зарегистрироваться.")
+    end
+    it "don't allow to delete exponat of other user" do
+      exponat = create(:exponat)
+      user1 = exponat.user
+      user2 = FactoryGirl.create(:user)
+      sign_in :user, user2
+      delete :destroy, id: exponat
+      expect(response).to have_http_status(302)
+      expect(response.request.flash["alert"]).to include("Вы пытаетесь совершить деструктивные действия с чужим контентом")
+    end
+    it "deletes item if you are logged in and you are an owner" do
+      exponat = create(:exponat)
+      user = exponat.user
+      sign_in :user, user
+      delete :destroy, id: exponat
+      expect(Exponat.count).to eq(0)
+    end
+  end
+end
 end
