@@ -1,0 +1,13 @@
+<%= simple_form_for(@image) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-group input-group">
+    <%= f.label :item, class: "control-label input-group-addon" %>
+    <%= f.file_field :item, class: "form-control" %>
+    <p class="input-group-addon extra">Maximum file size: 2MB.</p>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

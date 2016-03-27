@@ -38,4 +38,15 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+  config.paperclip_defaults = {
+    :storage => :s3,
+    :s3_credentials => {
+        :bucket => 'edusontest',
+        :access_key_id => "AKIAJJNJBRMQFOMWPUMA",
+        :secret_access_key => "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"
+    },
+    :url =>':s3_domain_url',
+    :path => '/:class/:attachment/:id_partition/:style/:filename',
+    :s3_host_name => 's3.amazonaws.com'
+}
 end
