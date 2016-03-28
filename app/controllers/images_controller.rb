@@ -1,5 +1,9 @@
 class ImagesController < ApplicationController
+  before_action :authenticate_user!, only: [:new, :create,:edit, :update, :destroy]
   before_action :set_image, only: [:show, :edit, :update, :destroy]
+  before_action :check_rights, only: [:edit, :update, :destroy]
+
+  
 
   # GET /images
   # GET /images.json
@@ -24,7 +28,7 @@ class ImagesController < ApplicationController
   # POST /images
   # POST /images.json
   def create
-    @image = Image.new(image_params)
+    @image = current_user.images.new(image_params)
 
     respond_to do |format|
       if @image.save
@@ -70,5 +74,14 @@ class ImagesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def image_params
       params.require(:image).permit(:user_id,:item)
+    end
+
+    def check_rights
+      if @image.user != current_user  
+        respond_to do |format|
+          format.html { redirect_to root_url, alert: 'Вы пытаетесь совершить деструктивные действия с чужим контентом' }
+          format.json { head :no_content }
+        end
+      end    
     end
 end

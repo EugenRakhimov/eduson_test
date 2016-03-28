@@ -14,6 +14,7 @@
     <% @images.each do |image| %>
       <tr>
         <td><%= image.user %></td>
+        <td><%= image_tag image.item.url(:thumb), class: "thumbnail" %></td>
         <td><%= link_to 'Show', image %></td>
         <td><%= link_to 'Edit', edit_image_path(image) %></td>
         <td><%= link_to 'Destroy', image, method: :delete, data: { confirm: 'Are you sure?' } %></td>

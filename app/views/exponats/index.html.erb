@@ -14,7 +14,7 @@
   <tbody>
     <% @exponats.each do |exponat| %>
       <tr>
-        <td><%= exponat.link %></td>
+        <td><%= image_tag exponat.link, class: "thumbnail" %></td>
         <td><%= exponat.item_type %></td>
         <td><%= link_to 'Show', exponat %></td>
         <td><%= link_to 'Edit', edit_exponat_path(exponat) %></td>

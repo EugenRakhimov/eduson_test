@@ -21,7 +21,7 @@ RSpec.describe ExponatsController, :type => :controller do
     end
 
     it "loads all of the gallery items into @exponats" do
-      exponat1, exponat2 = Exponat.create!, Exponat.create!
+      exponat1, exponat2 = create(:exponat), create(:exponat)
       get :index
 
       expect(assigns(:exponats)).to match_array([exponat1, exponat2])
@@ -106,9 +106,9 @@ RSpec.describe ExponatsController, :type => :controller do
       exponat = create(:exponat)
       user = exponat.user
       sign_in :user, user
-      patch :update, id: exponat, exponat: { link: "test.link", item_type: 6 }
+      patch :update, id: exponat, exponat: { link: "http://stackoverflow.com/", item_type: 6 }
       exponat = Exponat.first
-      expect(exponat.link).to eq("test.link")
+      expect(exponat.link).to eq("http://stackoverflow.com/")
       expect(exponat.item_type).to eq(6)
     end
   end

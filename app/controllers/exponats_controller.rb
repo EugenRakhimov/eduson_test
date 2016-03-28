@@ -77,9 +77,6 @@ class ExponatsController < ApplicationController
     end
 
     def check_rights
-      puts @exponat.user.id
-      puts @exponat
-      puts current_user
       if @exponat.user != current_user  
         respond_to do |format|
           format.html { redirect_to root_url, alert: 'Вы пытаетесь совершить деструктивные действия с чужим контентом' }
